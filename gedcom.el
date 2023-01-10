@@ -45,10 +45,10 @@
 
 ;; This version allows you not only to add a note and a change date
 ;; but to insert (frequently used) tags via keyboard or menu commands.
-;; 
+;;
 ;; The Gedcom menu provides many tags that are not accessible via
 ;; keyboard.  I've grouped nearly all these tags according to
-;; gedcgram.txt (don't know where I found the file). 
+;; gedcgram.txt (don't know where I found the file).
 ;;
 ;; gedcom.el can now also be used to browse gedcom files. Several
 ;; commands are provided to move from record to record and display
@@ -56,7 +56,7 @@
 
 ;; ---------------------------------------------------------------------------
 ;;; Installation:
-;; 
+;;
 ;; Put this file where Emacs can find it and byte-compile it.
 ;;
 ;; Add this to your .emacs:
@@ -65,7 +65,7 @@
 ;; Unix (and Win < 3.0.7):
 ;;   (setq auto-mode-alist (cons '("lltmp[0-9a-zA-Z.]+$" . gedcom-mode) auto-mode-alist))
 ;; Win (>= 3.0.7)
-;;  (setq auto-mode-alist (cons '("llt[0-9a-zA-Z]+$" . gedcom-mode) auto-mode-alist)) 
+;;  (setq auto-mode-alist (cons '("llt[0-9a-zA-Z]+$" . gedcom-mode) auto-mode-alist))
 
 ;; If you use LifeLines with DOS, you should add this:
 ;;   (autoload 'gedcom-mode "gedcom")
@@ -85,7 +85,7 @@
 ;; * user-defined tags can be customized and read with completion
 ;;   (Thanks to Marc Nozell <marc@nozell.com> for an essential hint)
 ;; * Only one CHAN record allowed according to Gedcom Standard 5.5 [2];
-;;   you can customize if an old record is deleted 
+;;   you can customize if an old record is deleted
 ;; * In SOUR records text can now be added again, even if no page is
 ;;   entered [2]
 ;;   [2] Thanks to Bjørn-Helge Mevik <bhm@math.uio.no> for his notes
@@ -107,7 +107,7 @@
 
 
 ;; Version 0.3-m
-;; * code revised 
+;; * code revised
 ;; * new tags
 ;; * Customization stuff
 ;; * Menu support
@@ -129,7 +129,7 @@
 ;; - better determination if we edit in a server-client or not
 
 ;; ---------------------------------------------------------------------------
-
+(require 'view)
 ;;; Code:
 
 (defconst gedcom-mode-version "0.5-m")
@@ -154,8 +154,8 @@
     ;; We have the old custom-library, hack around it!
     (defmacro defgroup (&rest args)
       nil)
-    (defmacro defcustom (var value doc &rest args) 
-      (` (defvar (, var) (, value) (, doc))))))
+    (defmacro defcustom (var value doc &rest args)
+      `( (defvar ,@var ,@value ,@doc)))))
 
 
 ;; User-configurable variables:
@@ -212,12 +212,12 @@
 
 
 (defcustom gedcom-tag-regexp "[1-9] _?[A-Z][A-Z][A-Z]+ "
-  "*Regexp used to find tags. 
+  "*Regexp used to find tags.
 The default Regexp (1) skips \"empty\" tags (BIRT, DEAT, etc.).
 If you choose Regexp (2), those tags are found, too."
    :group 'gedcom
-   :type '(choice 
-	    (const :tag "1: \"[1-9] _?[A-Z][A-Z][A-Z]+ \"" "[1-9] _?[A-Z][A-Z][A-Z]+ ") 
+   :type '(choice
+	    (const :tag "1: \"[1-9] _?[A-Z][A-Z][A-Z]+ \"" "[1-9] _?[A-Z][A-Z][A-Z]+ ")
 	    (const :tag "2: \"[1-9] _?[A-Z][A-Z][A-Z]+\"" "[1-9] _?[A-Z][A-Z][A-Z]+")))
 
 
@@ -284,7 +284,7 @@ See also `gedcom-usrtag'."
   (define-key gedcom-mode-map "\M-\C-n" 'gedcom-forward-record-narrowed)
   (define-key gedcom-mode-map "\C-xgs" 'gedcom-show-ref))
 
-;;; 
+;;;
 (if (not (assoc 'gedcom-parent-buffer minor-mode-alist))
     (setq minor-mode-alist
 	  (cons '(gedcom-parent-buffer gedcom-parent-buffer-name)
@@ -335,7 +335,7 @@ See also `gedcom-usrtag'."
 ;; experimental!!!
 ;;
 (defvar gedcom--imenu-generic-expression
-  (list 
+  (list
     (list "INDI" "1 NAME \\(.*\\)" 1))
   "Imenu generic expression for Gedcom-mode.  See `imenu-generic-expression'.")
 
@@ -358,8 +358,8 @@ See also `gedcom-usrtag'."
 ;; useful. If you don't like it -- just change it.
 
  (easy-menu-define
-  gedcom-mode-menu 
-  gedcom-mode-map 
+  gedcom-mode-menu
+  gedcom-mode-map
   "Gedcom Menu"
  '("Gedcom"
     ("Individual record"
@@ -538,7 +538,7 @@ with no arges, if that value is non-nil."
     (beginning-of-line)
     (skip-chars-forward " \t")
     (if (looking-at "[1-9]")
-	(gedcom--indent-to-column 
+	(gedcom--indent-to-column
 	 (* gedcom-level-indent
 	    (- (string-to-int (char-to-string (char-after (point))))
 	       (string-to-int "1"))))
@@ -587,10 +587,10 @@ with no arges, if that value is non-nil."
             (server-edit)))))
 
 
-;;; Keymap for 
+;;; Keymap for
 (defvar gedcom-note-entry-mode nil
   "Keymap used in gedcom note entry mode.")
-(if gedcom-note-entry-mode 
+(if gedcom-note-entry-mode
     nil
   (setq gedcom-note-entry-mode (make-sparse-keymap))
   (define-key gedcom-note-entry-mode "\M-n" 'gedcom-next-note)
@@ -650,7 +650,7 @@ with no arges, if that value is non-nil."
     (if server-clients
       (server-edit))))
 
-  
+
 (defun gedcom--dress-buffer (level tag)
   (goto-char 0)
   (if (not (eobp))
@@ -780,7 +780,7 @@ with no arges, if that value is non-nil."
   (gedcom-forward-record)
   (gedcom-narrow-to-record))
 
-    
+
 (defun gedcom-backward-record-narrowed ()
   "Moves point to previous record and displays it narrowed"
   (interactive)
@@ -796,7 +796,7 @@ The record visible is the one that contains point or follows point."
   (interactive)
   (save-excursion
     (widen)
-    (gedcom-forward-record)  
+    (gedcom-forward-record)
     (beginning-of-line)
     (let ((end (point)))
       (gedcom-backward-record)
@@ -901,7 +901,7 @@ Key definitions:
 
 
 ;; ---------------------------------------------------------------------------
-;; Helper functions for Imenu experimental 
+;; Helper functions for Imenu experimental
 
 ;; Actually, Imenu works with small gedcom files (< 1000
 ;; entries). With large files, the system hangs after the first
@@ -910,7 +910,7 @@ Key definitions:
 
 ;;; An item looks like (NAME . POSITION).
 (defun gedcom--imenu-sort-by-name (item1 item2)
-  (let* ((namen1 (gedcom--string-split (car item1) "/")) 
+  (let* ((namen1 (gedcom--string-split (car item1) "/"))
 	 (namen2 (gedcom--string-split (car item2) "/"))
 	 (nname1 (car (cdr namen1)))            ; Nachname 1
 	 (nname2 (car (cdr namen2))))           ; Nachname 2
@@ -918,7 +918,7 @@ Key definitions:
 
 
 
-;; This defun is taken from 
+;; This defun is taken from
 ;; string-fns.el --- an assortment of string-manipulation functions
 ;; written by Noah S. Friedman
 (defun gedcom--string-split (string &optional separator limit)
@@ -956,7 +956,7 @@ If optional arg LIMIT is specified, split into no more than that many
 ;; ---------------------------------------------------------------------------
 ;;
 
-;; dummy 
+;; dummy
 (defun gedcom-not-implemented ()
   "Dummy-Function"
   (interactive)
@@ -1061,8 +1061,8 @@ If optional arg LIMIT is specified, split into no more than that many
 ;; the GEDCOM Standard 5.5 describes TYPE as mandantory
 ;; but maybe you won't use it
      (if (not (string= typ ""))
-        (progn 
-	  (insert "2 TYPE " typ)     
+        (progn
+	  (insert "2 TYPE " typ)
 	  (gedcom--indent-and-insert-new-line)))
      (insert "2 RELA " rel)
      (gedcom--indent-and-insert-new-line)))
@@ -1088,14 +1088,14 @@ If optional arg LIMIT is specified, split into no more than that many
 (defun gedcom--insert-level1-tag (tag &optional prompt default noeven)
    (let ((lvl 1))
      (if prompt
-       (let ((text (read-string (concat prompt ": ") nil nil default)))    
+       (let ((text (read-string (concat prompt ": ") nil nil default)))
           (insert (concat (number-to-string lvl) " " tag " " text)))
        (insert (concat (number-to-string lvl) " " tag)))
      (gedcom--indent-and-insert-new-line)
      (if (not noeven)
        (gedcom-even-stru (1+ lvl)))))
 
-;; BIRT 
+;; BIRT
 (defun gedcom-birt ()
   "Insert BIRT tag"
   (interactive)
@@ -1117,35 +1117,35 @@ If optional arg LIMIT is specified, split into no more than that many
   (gedcom--insert-level1-tag "BAPM"))
 
 
-;; DEAT 
+;; DEAT
 (defun gedcom-deat ()
   "Insert DEAT tag"
   (interactive)
   (gedcom--insert-level1-tag "DEAT"))
 
 
-;; BURI 
+;; BURI
 (defun gedcom-buri ()
   "Insert BURI tag"
   (interactive)
   (gedcom--insert-level1-tag "BURI"))
 
 
-;; RESI 
+;; RESI
 (defun gedcom-resi ()
   "Insert RESI tag"
   (interactive)
   (gedcom--insert-level1-tag "RESI"))
 
 
-;; OCCU 
+;; OCCU
 (defun gedcom-occu ()
   "Insert OCCU tag"
   (interactive)
   (gedcom--insert-level1-tag "OCCU" "Occupation"))
 
 
-;; MARR 
+;; MARR
 (defun gedcom-marr ()
   "Insert MARR tag"
   (interactive)
@@ -1153,7 +1153,7 @@ If optional arg LIMIT is specified, split into no more than that many
 
 
 
-;; DIV 
+;; DIV
 (defun gedcom-divo ()
   "Insert DIV tag"
   (interactive)
@@ -1354,7 +1354,7 @@ If optional arg LIMIT is specified, split into no more than that many
   "Insert NAME tag"
   (interactive)
   (let ((gedcom-fnam (read-string "Name prefix and First Name: "))
-        (gedcom-snam (setq gedcom-snam 
+        (gedcom-snam (setq gedcom-snam
                       (or (read-string "Surname: " gedcom-snam))))
         (gedcom-nams (read-string "Name suffix: "))
        )
@@ -1367,7 +1367,7 @@ If optional arg LIMIT is specified, split into no more than that many
 (defun gedcom-refn ()
   "Insert REFN tag"
   (interactive)
-  (let ((gedcom-refn (setq gedcom-refn 
+  (let ((gedcom-refn (setq gedcom-refn
                       (or (read-string "REFN: " gedcom-refn)))))
   (if (not (string= gedcom-refn ""))
     (progn
@@ -1377,7 +1377,7 @@ If optional arg LIMIT is specified, split into no more than that many
 
 ;; User-defined tag
 (defun gedcom-usrtag (&optional level)
-  "Insert user defined tag at LEVEL; default is 1. An underscore is 
+  "Insert user defined tag at LEVEL; default is 1. An underscore is
 put before the tag.
 
 You can choose a value from a completion-list. If you've not set
