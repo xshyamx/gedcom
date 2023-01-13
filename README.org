@@ -1,0 +1,8 @@
+#+title: GEDCOM Mode
+Gedcom mode is a major mode for editing Genealogy data in the [[https://www.gedcom.org/gedcom.html][GEDCOM]] format.
+** Changelog
+*** 2023-01-13
+- Fixed old quasi-quoting syntax
+- Adding require for view to use ~view-mode-map~
+- Added ~xref-backend~ to support jumping to definition & references
+  (~M-.~ to jump to a definition & ~M-?~ to view references)
