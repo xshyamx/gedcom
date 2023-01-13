@@ -1,4 +1,21 @@
-;; xref backend
+;;; gedcom-xref.el --- xref backend for GEDCOM files
+
+;; Author:   S. Shyam Sundar (xshyamx@users.noreply.github.com)
+;; Version:  0.1
+
+;; Additional stuff
+;; Keywords: genealogy, lifelines, gedcom, xref
+
+;;; Commentary (S. Shyam Sundar):
+
+;; Added `xref-backend' to support jumping to definition & references
+;; As long as the line contains a valid GEDCOM identifer reference
+;; you can use the following standard xref keys
+;;
+;; Use M-. to jump to a definition (M-, to jump back)
+;; And M-? to view references
+;;
+
 (defun gedcom-xref-backend ()
   "xref-gedcom backend for Xref."
   'xref-gedcom)
