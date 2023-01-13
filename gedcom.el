@@ -129,7 +129,7 @@
 ;; - better determination if we edit in a server-client or not
 
 ;; ---------------------------------------------------------------------------
-(require 'view)
+
 ;;; Code:
 
 (defconst gedcom-mode-version "0.5-m")
@@ -155,7 +155,7 @@
     (defmacro defgroup (&rest args)
       nil)
     (defmacro defcustom (var value doc &rest args)
-      `( (defvar ,@var ,@value ,@doc)))))
+      (` (defvar (, var) (, value) (, doc))))))
 
 
 ;; User-configurable variables:
@@ -250,6 +250,7 @@ See also `gedcom-usrtag'."
 (require 'ring)
 (require 'easymenu)
 (require 'font-lock)
+(require 'view)
 
 ;; ---------------------------------------------------------------------------
 
@@ -479,6 +480,7 @@ See also `gedcom-usrtag'."
 
 ;; ---------------------------------------------------------------------------
 
+(require 'gedcom-xref)
 ;;;###autoload
 (defun gedcom-mode ()
   "Major mode for editing GEDCOM records.
@@ -525,6 +527,7 @@ with no arges, if that value is non-nil."
        gedcom--imenu-generic-expression)
   (setq imenu-case-fold-search t)
   (setq imenu-sort-function 'gedcom--imenu-sort-by-name)
+	(add-hook 'xref-backend-functions #'gedcom-xref-backend)
 
   ;; Hooks
   (run-hooks 'gedcom-mode-hook))
