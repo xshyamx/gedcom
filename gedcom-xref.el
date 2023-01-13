@@ -59,9 +59,9 @@ The current implementation returns all the identifiers in the current buffer"
   (message "Symbol: %s" symbol)
   (save-excursion
     (save-restriction
-      (widen)														; widen buffer before searching
-      (goto-char (point-min)) 					; move to beginning of buffer
-      (let ((case-fold-search t)				; case-sensitive search
+      (widen)				; widen buffer before searching
+      (goto-char (point-min)) 		; move to beginning of buffer
+      (let ((case-fold-search t)	; case-sensitive search
 	    (ref-regexp (gedcom--reference-regexp symbol))
 	    (i 0)
 	    (matches))
