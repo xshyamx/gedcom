@@ -17,10 +17,10 @@
 ;;
 
 (defun gedcom-xref-backend ()
-  "xref-gedcom backend for Xref."
-  'xref-gedcom)
+  "gedcom backend for Xref."
+  'gedcom)
 
-(cl-defmethod xref-backend-identifier-at-point ((_backend (eql xref-gedcom)))
+(cl-defmethod xref-backend-identifier-at-point ((_backend (eql gedcom)))
   (save-excursion
     (beginning-of-line)
     (let ((case-fold-search t))
@@ -32,9 +32,8 @@
       )
     ))
 
-					;  (symbol-name (symbol-at-point)))
 
-(cl-defmethod xref-backend-identifier-completion-table ((_backend (eql xref-gedcom)))
+(cl-defmethod xref-backend-identifier-completion-table ((_backend (eql gedcom)))
   "Return a list of terms for completions from symbols in the current buffer.
 The current implementation returns all the identifiers in the current buffer"
   (let (words)
@@ -46,10 +45,10 @@ The current implementation returns all the identifiers in the current buffer"
           (add-to-list 'words (match-string-no-properties 0)))
         (seq-uniq words)))))
 
-(cl-defmethod xref-backend-definitions ((_backend (eql xref-gedcom)) symbol)
+(cl-defmethod xref-backend-definitions ((_backend (eql gedcom)) symbol)
   (gedcom--xref-find-definitions symbol))
 
-(cl-defmethod xref-backend-references ((_backend (eql xref-gedcom)) symbol)
+(cl-defmethod xref-backend-references ((_backend (eql gedcom)) symbol)
   (gedcom--xref-find-references symbol))
 
 
@@ -105,6 +104,5 @@ The current implementation returns all the identifiers in the current buffer"
   "Return a regular expression to search for REF definition."
   (rx-to-string `(: bol "0 " ,ref)))
 
-
-;; (add-hook xref-backend-functions #'gedcom-xref-backend)
+;; provide
 (provide 'gedcom-xref)
