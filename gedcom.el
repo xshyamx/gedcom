@@ -210,6 +210,11 @@
    :group 'gedcom
    :type 'string)
 
+(defcustom gedcom-enable-eldoc t
+  "*Non-nil displays the tag help in echo area."
+  :group 'gedcom
+  :type 'boolean)
+
 
 (defcustom gedcom-tag-regexp "[1-9] _?[A-Z][A-Z][A-Z]+ "
   "*Regexp used to find tags.
@@ -453,9 +458,6 @@ See also `gedcom-usrtag'."
       )
     ))
 
-
-
-
 
 ;;;---------------------------------------------------
 ;;; support for font-lock
@@ -481,6 +483,7 @@ See also `gedcom-usrtag'."
 ;; ---------------------------------------------------------------------------
 
 (require 'gedcom-xref)
+(require 'gedcom-eldoc)
 ;;;###autoload
 (defun gedcom-mode ()
   "Major mode for editing GEDCOM records.
@@ -521,6 +524,8 @@ with no arges, if that value is non-nil."
 
   ;; add Menu
   (easy-menu-add gedcom-mode-menu gedcom-mode-map)
+  ;; enable eldoc
+  (turn-on-gedcom-eldoc)
 
   ;; Imenu support -- experimental! Use at your own risk!
   (set (make-local-variable 'imenu-generic-expression)
@@ -528,7 +533,6 @@ with no arges, if that value is non-nil."
   (setq imenu-case-fold-search t)
   (setq imenu-sort-function 'gedcom--imenu-sort-by-name)
 	(add-hook 'xref-backend-functions #'gedcom-xref-backend)
-
   ;; Hooks
   (run-hooks 'gedcom-mode-hook))
 
@@ -1398,6 +1402,7 @@ call `customize-option' on `gedcom-utag-alist'."
     (insert (concat (number-to-string level) " _" (upcase gedcom-utag) " " val))
     (gedcom--indent-and-insert-new-line))
   (gedcom-sour (1+ level)))
+
 
 (provide 'gedcom)
 ;;; End of lifelines definitions
