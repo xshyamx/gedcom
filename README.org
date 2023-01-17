@@ -6,3 +6,6 @@ Gedcom mode is a major mode for editing Genealogy data in the [[https://www.gedc
 - Adding require for view to use ~view-mode-map~
 - Added ~xref-backend~ to support jumping to definition & references
   (~M-.~ to jump to a definition & ~M-?~ to view references)
+*** 2023-01-17
+- Renamed ~xref-backend~ name to ~gedcom~
+- Added GEDCOM tag help at point via ~eldoc~
