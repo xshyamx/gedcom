@@ -342,7 +342,7 @@ See also `gedcom-usrtag'."
 ;;
 (defvar gedcom--imenu-generic-expression
   (list
-    (list "INDI" "1 NAME \\(.*\\)" 1))
+    (list nil "1 NAME \\(.*\\)" 1))
   "Imenu generic expression for Gedcom-mode.  See `imenu-generic-expression'.")
 
 

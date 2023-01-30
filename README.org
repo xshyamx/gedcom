@@ -9,3 +9,5 @@ Gedcom mode is a major mode for editing Genealogy data in the [[https://www.gedc
 *** 2023-01-17
 - Renamed ~xref-backend~ name to ~gedcom~
 - Added GEDCOM tag help at point via ~eldoc~
+*** 2023-01-30
+- Do not show =INDI= submenu in ~imenu~
