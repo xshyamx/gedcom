@@ -532,7 +532,7 @@ with no arges, if that value is non-nil."
        gedcom--imenu-generic-expression)
   (setq imenu-case-fold-search t)
   (setq imenu-sort-function 'gedcom--imenu-sort-by-name)
-	(add-hook 'xref-backend-functions #'gedcom-xref-backend)
+	(add-hook 'xref-backend-functions #'gedcom-xref-backend nil t)
   ;; Hooks
   (run-hooks 'gedcom-mode-hook))
 
